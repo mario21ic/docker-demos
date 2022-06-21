@@ -1,0 +1,29 @@
+#version: "3.9"
+version: "2.7"
+services:
+  web:
+    image: nginx:alpine
+    #build: ./
+    ports:
+      - "80:80"
+    volumes:
+      - ./html/:/usr/share/nginx/html/
+    cpu_shares: 2
+    mem_reservation: 50m
+    mem_limit: 100m
+
+
+    # only on swarm mode
+    #deploy:
+    #  resources:
+    #    limits:
+    #      cpus: '0.50'
+    #      memory: 50M
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 20M
+
+
+volumes:
+  logvolume01: {}
+
