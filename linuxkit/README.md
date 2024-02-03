@@ -1,3 +1,9 @@
+Dependencies:
+```
+$ sudo apt install build-essential
+$ sudo apt install qemu-system
+```
+
 Build and Run:
 ```
 linuxkit run redis-os.yml
