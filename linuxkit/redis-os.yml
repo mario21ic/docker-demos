@@ -1,0 +1,29 @@
+# Minimal YAML to run a redis server (used at DockerCon'17)
+# connect: nc localhost 6379
+kernel:
+  image: linuxkit/kernel:5.10.104
+  cmdline: "console=tty0 console=ttyS0 console=ttyAMA0 console=ttysclp0"
+init:
+  - linuxkit/init:45a1ad5919f0b6acf0f0cf730e9434abfae11fe6
+  - linuxkit/runc:92b1fea787c01cef46f07f783c80631a7071cfbb
+  - linuxkit/containerd:e7a92d9f3282039eac5fb1b07cac2b8664cbf0ad
+onboot:
+  - name: dhcpcd
+    image: linuxkit/dhcpcd:e9e3580f2de00e73e7b316a007186d22fea056ee
+    command: ["/sbin/dhcpcd", "--nobackground", "-f", "/dhcpcd.conf", "-1"]
+services:
+  - name: getty
+    image: linuxkit/getty:5d86a2ce2d890c14ab66b13638dcadf74f29218b
+    env:
+     - INSECURE=true
+  # Currently redis:4.0.6-alpine has trust issue with multi-arch
+  # https://github.com/docker-library/official-images/issues/3794
+  - name: redis
+    image: redis:4.0.5-alpine
+    capabilities:
+     - CAP_NET_BIND_SERVICE
+     - CAP_CHOWN
+     - CAP_SETUID
+     - CAP_SETGID
+     - CAP_DAC_OVERRIDE
+    net: host
